@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:states/models/user.dart';
+import 'package:states/services/user_service.dart';
 
 class Page1Screen extends StatelessWidget {
   const Page1Screen({Key? key}) : super(key: key);
@@ -9,7 +11,16 @@ class Page1Screen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Page1'),
       ),
-      body: UserInformation(),
+      body: StreamBuilder(
+        stream: userService.streamCtrlUser,
+        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+          return snapshot.hasData
+              ? UserInformation(user: snapshot.data!)
+              : const Center(
+                  child: Text("There's no user information"),
+                );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.usb_rounded),
         onPressed: () => Navigator.pushNamed(context, 'page2'),
@@ -21,7 +32,10 @@ class Page1Screen extends StatelessWidget {
 class UserInformation extends StatelessWidget {
   const UserInformation({
     Key? key,
+    required this.user,
   }) : super(key: key);
+
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -31,36 +45,36 @@ class UserInformation extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
+        children: [
+          const Text(
             'General',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            title: Text('Name: '),
+            title: Text('Name: ${user.name}'),
           ),
           ListTile(
-            title: Text('age: '),
+            title: Text('age: ${user.age}'),
           ),
-          Text(
+          const Text(
             'Proffesions',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          Divider(),
-          ListTile(
+          const Divider(),
+          const ListTile(
             title: Text('proffesion'),
           ),
-          ListTile(
+          const ListTile(
             title: Text('proffesion'),
           ),
-          ListTile(
+          const ListTile(
             title: Text('proffesion'),
           ),
         ],
